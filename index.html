@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <label for="">first</label>
+    <input type="text" id="fname" />
+    <br />
+    <label for="">first</label>
+    <input type="text" id="lname" />
+    <br />
+    <button id="Add">Save</button>
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-app.js";
+      import {
+        getDatabase,
+        ref,
+        child,
+        get,
+        set,
+        update,
+        remove,
+      } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-database.js";
+      const firebaseConfig = {
+        apiKey: "AIzaSyBiimF3fcbTOuCTD4yduaZ3CHN3m4wVL7U",
+        authDomain: "fir-v10-da34c.firebaseapp.com",
+        databaseURL: "https://fir-v10-da34c-default-rtdb.firebaseio.com",
+        projectId: "fir-v10-da34c",
+        storageBucket: "fir-v10-da34c.appspot.com",
+        messagingSenderId: "941567241711",
+        appId: "1:941567241711:web:19ad3ab00c5f7c36545a1a",
+      };
+
+      // Initialize Firebase
+      const app = initializeApp(firebaseConfig);
+      const db = getDatabase();
+      let Fname = document.getElementById("fname");
+      let Lname = document.getElementById("lname");
+      let BtnAdd = document.getElementById("Add");
+      function AddData() {
+        set(ref(db, "Employee/" + Lname.value), {
+          name: { firstname: Fname.value, lastname: Lname.value },
+        })
+          .then(() => {
+            alert("Success");
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      }
+      function RefData() {
+        const dbRef = ref(db);
+        get(child(dbRef, "Employee/" + Lname.value)).then((snapshot) => {
+          if (snapshot.exists()) {
+            Fname.value = snapshot.val().name.firstname;
+            Lname.value = snapshot.val().name.lastname;
+          } else {
+            alert("Error");
+          }
+        }); 
+      }
+      BtnAdd.addEventListener('click', AddData);
+    </script>
+  </body>
+</html>
